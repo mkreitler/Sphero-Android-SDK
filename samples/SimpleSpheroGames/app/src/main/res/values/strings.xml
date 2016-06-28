@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">SimpleSpheroGames</string>
+    <string name="logo_text">Sphero</string>
+    <string name="intro_text">Tap to begin</string>
+    <string name="search_stage_01">Searching for Sphero...</string>
+    <string name="search_stage_02">...connecting to Sphero...</string>
+    <string name="search_stage_03">Connected!</string>
+    <string name="stage_time">Search time: </string>
+    <string name="seconds">sec</string>
+    <string name="tap_to_play">Tap to start playing</string>
+
+    <!-- Main Menu Text -->
+    <string name="main_menu_title">MAIN MENU</string>
+    <string name="main_option_drive">Drive</string>
+    <string name="main_option_hot_potato">Hot Potato</string>
+    <string name="main_option_bomb_juggle">Bomb Juggle</string>
+    <string name="main_option_sphero_pong">Sphero Pong</string>
+    <string name="main_option_onslaught">Onslaught</string>
+    <string name="main_action_start">[START]</string>
+</resources>
