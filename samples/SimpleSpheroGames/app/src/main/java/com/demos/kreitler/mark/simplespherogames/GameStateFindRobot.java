@@ -85,7 +85,7 @@ public class GameStateFindRobot extends GameStateBase {
     }
 
     @Override
-    public boolean Update() {
+    public boolean Update(int dtMS) {
         long curTime = java.lang.System.currentTimeMillis();
 
         if ((int)(curTime - startTime) /  1000 > TIMEOUT_SEC) {

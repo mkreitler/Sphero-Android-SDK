@@ -35,6 +35,7 @@ import android.bluetooth.BluetoothAdapter;
 
 import com.demos.kreitler.mark.demouilib.WidgetBase;
 import com.demos.kreitler.mark.lib_demo_sprites.Sprite;
+import com.demos.kreitler.mark.simplespherogames.HotPotato.GameStateHotPotatoIntro;
 import com.demos.kreitler.mark.simplespherogames.MainActivity;
 import com.orbotix.ConvenienceRobot;
 import com.orbotix.DualStackDiscoveryAgent;
@@ -78,6 +79,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         protected int mCanvasHeight             = 0;
         protected GameStateBase currentState    = null;
         protected ConvenienceRobot mRobot       = null;
+        protected boolean bStarted              = false;
 
         protected Hashtable<String, GameStateBase> gameStateTable   = null;
 
@@ -85,6 +87,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         protected GameStateIntro gameStateIntro                     = null;
         protected GameStateFindRobot gameStateFindRobot             = null;
         protected GameStateMainMenu gameStateMainMenu               = null;
+        protected GameStateHotPotatoIntro gameStateHotPotatoIntro   = null;
 
         public GameThread(SurfaceHolder surfaceHolder, Context context,
                           Handler handler) {
@@ -243,6 +246,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             gameStateMainMenu = new GameStateMainMenu(this);
             gameStateTable.put("gamestatemainmenu", gameStateMainMenu);
 
+            gameStateHotPotatoIntro = new GameStateHotPotatoIntro(this);
+            gameStateTable.put("gamestatehotpotatointro", gameStateHotPotatoIntro);
+
             setState("gameStateIntro");
         }
 
@@ -263,9 +269,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
          * Starts the game, setting parameters for the current difficulty.
          */
         public void doStart() {
-            InitGraphics();
-            CreateStates();
-
             synchronized (mSurfaceHolder) {
                 mRun = true;
             }
@@ -324,6 +327,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
+            long lastTimeMS = java.lang.System.currentTimeMillis();
+
             while (mRun) {
                 Canvas c = null;
                 try {
@@ -333,9 +338,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         // we are sure all canvas draw operations are complete.
                         //
                         // If mRun has been toggled false, inhibit canvas operations.
+                        long currentTimeMS = java.lang.System.currentTimeMillis();
+                        int dtMS = (int)(currentTimeMS - lastTimeMS);
+                        lastTimeMS = currentTimeMS;
+
                         if (currentState != null) {
                             // TODO: check return value and exit it true?
-                            currentState.Update();
+                            currentState.Update(dtMS);
                         }
 
                         synchronized (mRunLock) {
@@ -431,6 +440,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             synchronized (mSurfaceHolder) {
                 mCanvasWidth = width;
                 mCanvasHeight = height;
+
+                if (!bStarted) {
+                    InitGraphics();
+                    CreateStates();
+
+                    bStarted = true;
+                }
 
                 /*
                 // don't forget to resize the background image

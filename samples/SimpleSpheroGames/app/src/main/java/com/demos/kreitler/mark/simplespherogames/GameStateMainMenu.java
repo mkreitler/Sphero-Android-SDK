@@ -54,8 +54,12 @@ public class GameStateMainMenu extends GameStateBase implements IWidgetListener 
         listOptions.AddListener(this);
 
         optionText = res.getString(R.string.main_action_start);
-        startAction = new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf");
+        startAction = new WidgetLabel(null, 0, 0, 0.0f, 0.0f, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf");
         startAction.AddListener(this);
+
+        listOptions.SetPosition(game.width() / 2, game.height() / 2);
+        startAction.SetPosition(game.width() - startAction.GetWorldBounds().width() * 11 / 10,
+                                game.height() - startAction.GetWorldBounds().height() * 11 / 10);
     }
 
     @Override
@@ -67,12 +71,6 @@ public class GameStateMainMenu extends GameStateBase implements IWidgetListener 
 
     @Override
     public void Draw(Canvas c) {
-        if (bFirstDraw) {
-            bFirstDraw = false;
-            listOptions.SetPosition(c.getWidth() / 2, c.getHeight() / 2);
-            startAction.SetPosition(c.getWidth() * 7 / 8, c.getHeight() * 5 / 6);
-        }
-
         c.save();
 
         c.drawARGB(255, 0, 0, 0);
@@ -105,6 +103,7 @@ public class GameStateMainMenu extends GameStateBase implements IWidgetListener 
 
             if (widget != null) {
                 widget.SetColor("green");
+                selectedOption = widget.GetText();
                 bHandled = true;
             }
         }
@@ -115,8 +114,20 @@ public class GameStateMainMenu extends GameStateBase implements IWidgetListener 
     public boolean OnWidgetTouchEnd(WidgetBase widget, int localX, int localY) {
         startAction.SetColor("white");
 
-        if (widget == startAction) {
+        if (selectedOption != null && widget == startAction) {
             // Load the appropriate state.
+            switch (selectedOption.toLowerCase()) {
+                case "hot potato": {
+                    game.setState("GameStateHotPotatoIntro");
+                    break;
+                }
+
+                // TODO: add additional cases here...
+
+                default: {
+                    break;
+                }
+            }
         }
 
         return true;
@@ -132,6 +143,8 @@ public class GameStateMainMenu extends GameStateBase implements IWidgetListener 
 
             widget.SetColor("green");
             lastTouched = widget;
+
+            selectedOption = widget.GetText();
         }
 
         return bHandled;
@@ -148,7 +161,7 @@ public class GameStateMainMenu extends GameStateBase implements IWidgetListener 
     private final float LIST_VERTICAL_SPACING   = 0.167f;
 
     private WidgetList listOptions      = null;
-    private boolean bFirstDraw          = true;
     private WidgetBase lastTouched      = null;
     private WidgetLabel startAction     = null;
+    private String selectedOption       = null;
 }

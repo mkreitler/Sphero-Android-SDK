@@ -22,7 +22,7 @@ public class GameStateBase {
     }
 
     public void Enter(GameView.GameThread game) {}
-    public boolean Update() {return true;}
+    public boolean Update(int dtMS) {return true;}
     public void Exit() {}
     public void Draw(Canvas c) {}
     public boolean OnTouch(View v, MotionEvent e) {return false;}

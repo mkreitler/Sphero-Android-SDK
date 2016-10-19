@@ -102,6 +102,16 @@ public class WidgetBase {
         return bTouchable;
     }
 
+    public void Hide() {
+        SetTouchable(false);
+        SetVisible(false);
+    }
+
+    public void Show() {
+        SetTouchable(true);
+        SetVisible(true);
+    }
+
     public void SetTouchable(boolean bWantsTouchable) {
         bTouchable = bWantsTouchable;
     }
