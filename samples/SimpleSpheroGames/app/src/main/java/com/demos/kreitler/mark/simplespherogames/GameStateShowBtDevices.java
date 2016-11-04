@@ -1,5 +1,6 @@
 package com.demos.kreitler.mark.simplespherogames;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,59 +16,60 @@ import com.demos.kreitler.mark.demouilib.IWidgetListener;
 import com.demos.kreitler.mark.demouilib.WidgetBase;
 import com.demos.kreitler.mark.demouilib.WidgetLabel;
 import com.demos.kreitler.mark.demouilib.WidgetList;
+import com.demos.kreitler.mark.lib_demo_bluetooth.BluetoothNetwork;
 import com.demos.kreitler.mark.lib_demo_sprites.Sprite;
 
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 /**
  * Created by Mark on 6/22/2016.
  */
-public class GameStateMainMenu extends GameStateBase implements IWidgetListener {
+public class GameStateShowBtDevices extends GameStateBase implements IWidgetListener {
+    private WidgetLabel titleLabel = null;
+
     // Interface ///////////////////////////////////////////////////////////////////////////////////
     // Static --------------------------------------------------------------------------------------
     // Instance ------------------------------------------------------------------------------------
-    public GameStateMainMenu(GameView.GameThread game) {
+    public GameStateShowBtDevices(GameView.GameThread game) {
         super(game);
 
         Resources res = game.getContext().getResources();
 
-        String titleText = res.getString(R.string.main_menu_title);
-        WidgetLabel titleLabel = new WidgetLabel(null, 0, 0, titleText, FONT_SIZE, "yellow", "fonts/FindleyBold.ttf");
+        String titleText = res.getString(R.string.bt_menu_title);
+        titleLabel = new WidgetLabel(null, 0, 0, titleText, FONT_SIZE, "yellow", "fonts/FindleyBold.ttf");
 
-        Vector<WidgetLabel>options = new Vector<WidgetLabel>();
-        String optionText = res.getString(R.string.main_option_drive);
-        options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
-
-        optionText = res.getString(R.string.main_option_hot_potato);
-        options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
-
-        optionText = res.getString(R.string.main_option_bomb_juggle);
-        options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
-
-        optionText = res.getString(R.string.main_option_sphero_pong_server);
-        options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
-
-        optionText = res.getString(R.string.main_option_sphero_pong_client);
-        options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
-
-        optionText = res.getString(R.string.main_option_onslaught);
-        options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
-
-        listOptions = new WidgetList(null, 0.5f, LIST_VERTICAL_SPACING, titleLabel, options);
-        listOptions.AddListener(this);
-
-        optionText = res.getString(R.string.main_action_start);
+        String optionText = res.getString(R.string.main_action_start);
         startAction = new WidgetLabel(null, 0, 0, 0.0f, 0.0f, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf");
         startAction.AddListener(this);
-
-        listOptions.SetPosition(game.width() / 2, game.height() / 2);
-        startAction.SetPosition(game.width() - startAction.GetWorldBounds().width() * 11 / 10,
-                                game.height() - startAction.GetWorldBounds().height() * 11 / 10);
     }
 
     @Override
     public void Enter(GameView.GameThread game) {
         super.Enter(game);
+
+        Vector<WidgetLabel>options = new Vector<WidgetLabel>();
+
+        listOptions = new WidgetList(null, 0.5f, LIST_VERTICAL_SPACING, titleLabel, options);
+        listOptions.AddListener(this);
+
+        listOptions.SetPosition(game.width() / 2, game.height() / 2);
+        startAction.SetPosition(game.width() - startAction.GetWorldBounds().width() * 11 / 10,
+                game.height() - startAction.GetWorldBounds().height() * 11 / 10);
+
+        if (BluetoothNetwork.Instance != null) {
+
+            Set<BluetoothDevice> pairedDevices = BluetoothNetwork.Instance.GetPairedDevices();
+
+            if (pairedDevices != null) {
+                Iterator<BluetoothDevice> device = pairedDevices.iterator();
+                while (device != null) {
+                    String optionText = device.toString().split(" ")[0];
+                    options.add(new WidgetLabel(null, 0, 0, optionText, FONT_SIZE, "white", "fonts/FindleyBold.ttf"));
+                }
+            }
+        }
 
         lastTouched = null;
     }

@@ -14,7 +14,11 @@
     <string name="main_option_drive">Drive</string>
     <string name="main_option_hot_potato">Hot Potato</string>
     <string name="main_option_bomb_juggle">Bomb Juggle</string>
-    <string name="main_option_sphero_pong">Sphero Pong</string>
+    <string name="main_option_sphero_pong_server">Sphero Pong (server)</string>
+    <string name="main_option_sphero_pong_client">Sphero Pong (client)</string>
     <string name="main_option_onslaught">Onslaught</string>
     <string name="main_action_start">[START]</string>
+
+    <!-- Bluetooth Menu Text -->
+    <string name="bt_menu_title">BLUETOOTH DEVICES</string>
 </resources>

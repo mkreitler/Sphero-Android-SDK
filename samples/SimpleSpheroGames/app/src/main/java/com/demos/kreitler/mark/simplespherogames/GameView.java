@@ -86,7 +86,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         protected GameStateFail gameStateFail                       = null;
         protected GameStateIntro gameStateIntro                     = null;
         protected GameStateFindRobot gameStateFindRobot             = null;
-        protected GameStateMainMenu gameStateMainMenu               = null;
+        // protected GameStateMainMenu gameStateMainMenu            = null;
+        protected GameStateShowBtDevices gameStateMainMenu          = null;
         protected GameStateHotPotatoIntro gameStateHotPotatoIntro   = null;
 
         public GameThread(SurfaceHolder surfaceHolder, Context context,
@@ -243,7 +244,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             gameStateFindRobot = new GameStateFindRobot(this, mContext);
             gameStateTable.put("gamestatefindrobot", gameStateFindRobot);
 
-            gameStateMainMenu = new GameStateMainMenu(this);
+            gameStateMainMenu = new GameStateShowBtDevices(this);
+            // gameStateMainMenu = new GameStateMainMenu(this);
             gameStateTable.put("gamestatemainmenu", gameStateMainMenu);
 
             gameStateHotPotatoIntro = new GameStateHotPotatoIntro(this);

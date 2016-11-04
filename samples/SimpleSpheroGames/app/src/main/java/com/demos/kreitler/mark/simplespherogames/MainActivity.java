@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.orbotix.DualStackDiscoveryAgent;
+import com.demos.kreitler.mark.lib_demo_bluetooth.*;
 
 public class MainActivity extends AppCompatActivity {
+    public static BluetoothNetwork bluetooth = null;
     private GameView gameView = null;
 
     // Interface ///////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         _this = this;
+
+        bluetooth = new BluetoothNetwork(this);
+        bluetooth.Enable();
 
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -52,12 +57,23 @@ public class MainActivity extends AppCompatActivity {
             DualStackDiscoveryAgent.getInstance().stopDiscovery();
         }
 
+        bluetooth.StopDiscovery();
+
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        bluetooth.Destroy();
+
+        super.onDestroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        bluetooth.StopDiscovery();
 
         gameView.OnPause();
     }
